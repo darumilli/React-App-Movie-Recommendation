@@ -6,7 +6,6 @@ import MovieCard from "./Components/MovieCard";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-    const apiKey = "api_key=b97316ed479ee4226afefc88d1792909";
     const [list, setList] = useState([]);
     const [homeGenreList, setHomeGenreList] = useState([{}]);
     const [selectedGenres, setSelectedGenres] = useState([]);
@@ -22,7 +21,7 @@ const Home = () => {
             Response.json().then((data) => setList(data.arr))
         );
         // getting the list of all genres
-        fetch(`https://api.themoviedb.org/3/genre/movie/list?${apiKey}`).then(
+        fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=b97316ed479ee4226afefc88d1792909`).then(
             (Response) =>
                 Response.json().then((data) => setHomeGenreList(data.genres))
         );
@@ -32,7 +31,7 @@ const Home = () => {
         setCurrMovies([]);
         if (selectedGenres.length > 0) {
             fetch(
-                `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&${apiKey}&release_date.lte=2019-12-12&with_genres=${encodeURI(
+                `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=b97316ed479ee4226afefc88d1792909&release_date.lte=2019-12-12&with_genres=${encodeURI(
                     selectedGenres.join(",")
                 )}`
             ).then((Response) =>
@@ -57,6 +56,7 @@ const Home = () => {
             setSelectedGenres((selectedGenres) => [...selectedGenres, genreId]);
         }
     };
+
     const renderMovies = () =>
         currMovies.map((movie) => {
             if (movie) {

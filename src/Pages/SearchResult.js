@@ -17,22 +17,24 @@ const SearchResult = () => {
     const [currGenre, setCurrGenre] = useState([{}]);
     const [videoData, setVideoData] = useState([]);
     const [playTrailer, setPlayTrailer] = useState(0);
+
+    const imgLink = "https://image.tmdb.org/t/p/original";
+    const backdropPath = "https://image.tmdb.org/t/p/w1280";
+
     const gotCast = (castData) => {
         setCastMembers([]);
-
         let counter = 5;
         for (let cast of castData) {
             setCastMembers((castMembers) => [...castMembers, cast]);
-            counter--;
-            if (counter === 0) break;
+            if (--counter === 0) break;
         }
     };
+
     const gotVideo = (data) => {
         if (data.videos && data.videos.results) {
             const trailer = data.videos.results.find(
                 (vid) => vid.name === "Official Trailer"
             );
-
             setVideoData(trailer ? trailer : data.videos.results[0]);
         }
     };
@@ -40,7 +42,6 @@ const SearchResult = () => {
     const gotRecommendedData = (apiData) => {
         setRecommendedMovies([]);
         let counter = 16;
-        // getting data for each of the recommened movies
         for (let movie of apiData.movies) {
             fetch(
                 `https://api.themoviedb.org/3/search/movie?${apiKey}&query=${movie}`
@@ -52,50 +53,45 @@ const SearchResult = () => {
                     ])
                 )
             );
-            counter--;
-            if (counter === 0) break;
+            if (--counter === 0) break;
         }
     };
 
-    useEffect(
-        () => {
-            const gotTMDBData = (apiData) => {
-                const realMovieData = apiData.results[0];
-                setCurrGenre([]);
-                setCurrGenre(realMovieData.genre_ids);
+    useEffect(() => {
+        const gotTMDBData = (apiData) => {
+            const realMovieData = apiData.results[0];
+            setCurrGenre(realMovieData.genre_ids);
+            setSearchedMovie(realMovieData);
 
-                setSearchedMovie(realMovieData);
-                fetch(
-                    `https://api.themoviedb.org/3/movie/${realMovieData.id}/credits?${apiKey}`
-                ).then((Response) =>
-                    Response.json().then((data) => gotCast(data.cast))
-                );
+            fetch(
+                `https://api.themoviedb.org/3/movie/${realMovieData.id}/credits?${apiKey}`
+            ).then((Response) =>
+                Response.json().then((data) => gotCast(data.cast))
+            );
 
-                fetch(
-                    `https://api.themoviedb.org/3/movie/${realMovieData.id}?${apiKey}&append_to_response=videos`
-                ).then((Response) =>
-                    Response.json().then((data) => gotVideo(data))
-                );
-            };
-            // getting data for the searched movie from tmdb
             fetch(
-                `https://api.themoviedb.org/3/search/movie?${apiKey}&query=${inputValue}`
+                `https://api.themoviedb.org/3/movie/${realMovieData.id}?${apiKey}&append_to_response=videos`
             ).then((Response) =>
-                Response.json().then((data) => gotTMDBData(data))
+                Response.json().then((data) => gotVideo(data))
             );
-            // getting list of recommended movie from our flask server
-            fetch(`/api/similarity/${inputValue}`).then((Response) =>
-                Response.json().then((data) => gotRecommendedData(data))
-            );
-            // getting the list of all genres
-            fetch(
-                `https://api.themoviedb.org/3/genre/movie/list?${apiKey}`
-            ).then((Response) =>
-                Response.json().then((data) => setGenreList(data.genres))
-            );
-        },
-        [inputValue] /*Making api call whenever the searched movie changes */
-    );
+        };
+
+        fetch(
+            `https://api.themoviedb.org/3/search/movie?${apiKey}&query=${inputValue}`
+        ).then((Response) =>
+            Response.json().then((data) => gotTMDBData(data))
+        );
+
+        fetch(`/api/similarity/${inputValue}`).then((Response) =>
+            Response.json().then((data) => gotRecommendedData(data))
+        );
+
+        fetch(
+            `https://api.themoviedb.org/3/genre/movie/list?${apiKey}`
+        ).then((Response) =>
+            Response.json().then((data) => setGenreList(data.genres))
+        );
+    }, [inputValue]);
 
     const RenderMovies = () =>
         recommendedMovies.map((movie) => {
@@ -110,46 +106,37 @@ const SearchResult = () => {
                 return null;
             }
         });
-    const RenderTrailer = () => {
-        return (
-            <div>
-                <ReactPlayer
-                    url={`https://www.youtube.com/watch?v=${videoData.key}-U`}
-                    playing={true}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    className="youtube-container"
-                />
-            </div>
-        );
-    };
+
+    const RenderTrailer = () => (
+        <div>
+            <ReactPlayer
+                url={`https://www.youtube.com/watch?v=${videoData.key}-U`}
+                playing={true}
+                width="100%"
+                height="100%"
+                controls={true}
+                className="youtube-container"
+            />
+        </div>
+    );
+
     const displayGenre = () =>
         currGenre.map((movieId, ind) => {
             if (ind >= 3) return null;
             if (movieId) {
                 for (let obj of genreList) {
                     if (obj.id === movieId) {
-                        if (ind === 2) {
-                            return <span>{obj.name}</span>;
-                        } else {
-                            return (
-                                <span>
-                                    {obj.name}
-                                    {","}{" "}
-                                </span>
-                            );
-                        }
+                        return (
+                            <span key={obj.id}>
+                                {obj.name}
+                                {ind === 2 ? "" : ", "}
+                            </span>
+                        );
                     }
                 }
-            } else {
-                return null;
             }
             return null;
         });
-
-    const imgLink = "https://image.tmdb.org/t/p/original";
-    const backdropPath = "https://image.tmdb.org/t/p/w1280";
 
     return (
         <div
@@ -161,11 +148,7 @@ const SearchResult = () => {
             <NavBar isHome={true} />
 
             <div className="container trailerContainer">
-                {
-                    videoData && playTrailer
-                        ? RenderTrailer()
-                        : null /*Rendering the trailer*/
-                }
+                {videoData && playTrailer ? RenderTrailer() : null}
                 <div className="container .movie-details">
                     <div className="row ">
                         <div className="col-md-6 left-box col-md-push-6">
@@ -182,16 +165,12 @@ const SearchResult = () => {
                                     if (member) {
                                         return (
                                             <a
-                                                href={` https://en.wikipedia.org/wiki/${member.name}`}
+                                                key={member.cast_id + member.id}
+                                                href={`https://en.wikipedia.org/wiki/${member.name}`}
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
-                                                {" "}
                                                 <img
-                                                    key={JSON.stringify(
-                                                        member.cast_id +
-                                                            member.id
-                                                    )}
                                                     src={
                                                         member.profile_path
                                                             ? `${imgLink}${member.profile_path}`
@@ -211,7 +190,6 @@ const SearchResult = () => {
                                 <b>Rating{" : "}</b>
                                 {searchedMovie.vote_average}
                                 {"/10 "}
-
                                 <i className="fa-solid fa-star"></i>
                             </div>
                             <div>
@@ -243,7 +221,6 @@ const SearchResult = () => {
                     </div>
                 </div>
             </div>
-            {/*Trailer Close Button */}
             <div className={playTrailer ? "DisplayOn" : "DisplayOFF"}>
                 <button
                     className="close-bttn"
@@ -254,10 +231,9 @@ const SearchResult = () => {
             </div>
 
             <div className="container-fluid recommendedMovies">
-                <h2 className=" container RecommendHeading">
+                <h2 className="container RecommendHeading">
                     Recommended Movies
                 </h2>
-                {/*Rendering the recommended movie cards */}
                 <div className="container recommendedGrid">
                     {RenderMovies()}
                 </div>
