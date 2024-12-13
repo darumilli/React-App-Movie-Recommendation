@@ -67,7 +67,6 @@ To get started with the Movie Recommendation Application, follow these steps:
 
     Follow the instructions in the backend repository to set up and run the FastAPI server with Gunicorn.
 
-
 ## Usage
 
 Once the application is running, you can:
@@ -79,7 +78,3 @@ Once the application is running, you can:
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License.
