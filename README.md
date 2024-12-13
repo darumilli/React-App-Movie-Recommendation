@@ -9,7 +9,7 @@ This is a Movie Recommendation Application built with React. It allows users to 
 - Get recommendations for similar movies
 - Responsive design
 - Personalized movie recommendations based on user preferences
-- Integration with a Flask backend for handling API requests
+- Integration with a FastAPI backend for handling API requests
 
 ## Installation
 
@@ -62,21 +62,11 @@ To get started with the Movie Recommendation Application, follow these steps:
 
      ```sh
      npm start
-     ```
 
-6. **Set up the Flask backend:**
+6. **Set up the FastAPI backend:**
 
-     Follow the instructions in the backend repository to set up and run the Flask server.
+    Follow the instructions in the backend repository to set up and run the FastAPI server with Gunicorn.
 
-7. **Configure environment variables:**
-
-     Create a `.env` file in the root directory and add the necessary environment variables for the React app and Flask backend.
-
-8. **Run the Flask backend:**
-
-     ```sh
-     flask run
-     ```
 
 ## Usage
 
