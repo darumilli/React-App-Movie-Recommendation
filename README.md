@@ -66,7 +66,6 @@ To get started with the Movie Recommendation Application, follow these steps:
     "proxy": "http://127.0.0.1:8000"
     ```
 
-    ```
 > **Note:** Using the loopback IP `127.0.0.1` worked for me.
 
 
