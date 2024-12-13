@@ -18,7 +18,7 @@ To get started with the Movie Recommendation Application, follow these steps:
 1. **Clone the repository:**
 
     ```sh
-    git clone https://github.com/your-username/movie-recommendation-application.git
+    git clone https://github.com/darumilli/React-App-Movie-Recommendation.git
     ```
 
 2. **Install Node.js and npm:**
