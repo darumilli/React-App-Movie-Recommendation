@@ -50,20 +50,38 @@ To get started with the Movie Recommendation Application, follow these steps:
 
      ```sh
      npm install --force
-     ```
+    ```
 
-4. **Build the application:**
+4. **Configure the proxy:**
 
-     ```sh
-     npm run build
-     ```
+    If you encounter issues with the backend API requests, you can try setting different values for the proxy in your `package.json` file. For example, you can use `localhost` with port `8000` or the loopback IP `127.0.0.1`:
 
-5. **Run the application:**
+    ```json
+    "proxy": "http://localhost:8000"
+    ```
 
-     ```sh
-     npm start
+    or
 
-6. **Set up the FastAPI backend:**
+    ```json
+    "proxy": "http://127.0.0.1:8000"
+    ```
+
+    ```
+    > **Note:** Using the loopback IP `127.0.0.1` worked for me.
+
+5. **Build the application:**
+
+    ```sh
+    npm run build
+    ```
+
+6. **Run the application:**
+
+    ```sh
+    npm start
+    ```
+
+7. **Set up the FastAPI backend:**
 
     Follow the instructions in the backend repository to set up and run the FastAPI server with Gunicorn.
 
