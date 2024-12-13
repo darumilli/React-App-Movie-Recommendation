@@ -8,7 +8,6 @@ This is a Movie Recommendation Application built with React. It allows users to 
 - View detailed information about a selected movie
 - Get recommendations for similar movies
 - Responsive design
-- User authentication and authorization
 - Personalized movie recommendations based on user preferences
 - Integration with a Flask backend for handling API requests
 
@@ -83,11 +82,9 @@ To get started with the Movie Recommendation Application, follow these steps:
 
 Once the application is running, you can:
 
-- Register and log in to your account
 - Search for movies by name
 - View detailed information about a selected movie
 - Get personalized recommendations based on your preferences
-- Log out of your account
 
 ## Contributing
 
