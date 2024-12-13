@@ -69,6 +69,7 @@ To get started with the Movie Recommendation Application, follow these steps:
     ```
 > **Note:** Using the loopback IP `127.0.0.1` worked for me.
 
+
 5. **Build the application:**
 
     ```sh
